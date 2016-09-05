@@ -20,9 +20,14 @@ UPositionReport::UPositionReport()
 void UPositionReport::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
+	AActor *Owner = GetOwner();
+	FTransform Transform = Owner->GetActorTransform();
+	FString TransformString = Transform.GetLocation().ToString();
+	FString ObjectName = Owner->GetName();
+	
+	UE_LOG(LogTemp, Warning, TEXT("Position Reporter active for %s"), *ObjectName);
+	UE_LOG(LogTemp, Warning, TEXT("%s is at %s"), *ObjectName, *TransformString)
 }
 
 
