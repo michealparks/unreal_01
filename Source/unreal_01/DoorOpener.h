@@ -22,7 +22,26 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 private:
-	AActor* Owner;
-	FRotator NewRotation = FRotator(0.0f, 0.0f, 0.0f);
-	float RotationSign = 1.0f;
+    void ToggleDoor(float Direction);
+
+    UPROPERTY(EditAnywhere)
+    float RotationDelta = 8.0f;
+    
+    UPROPERTY(VisibleAnywhere)
+    float Yaw = -90.0f;
+    
+    UPROPERTY(EditAnywhere)
+    float OpenAngle = 40.0f;
+    
+    UPROPERTY(EditAnywhere)
+    float ClosedAngle = -90.0f;
+    
+    FRotator NewRotation = FRotator(0.0f, 0.0f, 0.0f);
+    
+    UPROPERTY(EditAnywhere)
+    ATriggerVolume* PressurePlate;
+    
+    AActor* Owner;
+
+    APawn*  ActorThatOpens;
 };

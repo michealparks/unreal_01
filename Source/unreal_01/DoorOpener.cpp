@@ -3,9 +3,6 @@
 #include "unreal_01.h"
 #include "DoorOpener.h"
 
-#include <cmath>
-
-
 // Sets default values for this component's properties
 UDoorOpener::UDoorOpener()
 {
@@ -17,28 +14,34 @@ UDoorOpener::UDoorOpener()
 	// ...
 }
 
-
 // Called when the game starts
 void UDoorOpener::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	Owner = GetOwner();
+    
+    ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
+void UDoorOpener::ToggleDoor(float Direction)
+{
+    Yaw += (RotationDelta * Direction);
+    
+    NewRotation.Yaw = Yaw;
+    
+    Owner->SetActorRotation(NewRotation);
+}
 
 // Called every frame
 void UDoorOpener::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
-	NewRotation.Yaw += RotationSign;
-
-	if (std::abs(NewRotation.Yaw) > 90.0f) {
-		RotationSign *= -1.0f;
-	}
-
-	Owner->SetActorRotation(NewRotation);
-	// ...
+    
+    if (PressurePlate->IsOverlappingActor(ActorThatOpens)) {
+        if (Yaw < OpenAngle) ToggleDoor(1.0f);
+    } else {
+        if (Yaw > ClosedAngle) ToggleDoor(-1.0f);
+    }
 }
 
