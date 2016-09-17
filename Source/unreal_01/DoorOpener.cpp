@@ -19,9 +19,10 @@ void UDoorOpener::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	World = GetWorld();
 	Owner = GetOwner();
     
-    ActorThatOpens = GetWorld()->GetFirstPlayerController()->GetPawn();
+    ActorThatOpens = World->GetFirstPlayerController()->GetPawn();
 }
 
 void UDoorOpener::ToggleDoor(float Direction)
@@ -37,10 +38,25 @@ void UDoorOpener::ToggleDoor(float Direction)
 void UDoorOpener::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
+
+	if (IsDoorUnlocked) {
+		CurrentTime = World->GetTimeSeconds();
+
+		if (CurrentTime - UnlockedTime > UnlockPeriod) {
+			IsDoorUnlocked = false;
+		}
+	}
+
+	if (DoorUnlockTrigger->IsOverlappingActor(ActorThatOpens)) {
+		IsDoorUnlocked = true;
+		UnlockedTime = World->GetTimeSeconds();
+	}
     
-    if (PressurePlate->IsOverlappingActor(ActorThatOpens)) {
+    if (PressurePlate->IsOverlappingActor(ActorThatOpens) && IsDoorUnlocked) {
+		// Open door
         if (Yaw < OpenAngle) ToggleDoor(1.0f);
     } else {
+		// Close door
         if (Yaw > ClosedAngle) ToggleDoor(-1.0f);
     }
 }

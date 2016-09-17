@@ -25,7 +25,7 @@ private:
     void ToggleDoor(float Direction);
 
     UPROPERTY(EditAnywhere)
-    float RotationDelta = 8.0f;
+    float RotationDelta = 4.0f;
     
     UPROPERTY(VisibleAnywhere)
     float Yaw = -90.0f;
@@ -35,13 +35,26 @@ private:
     
     UPROPERTY(EditAnywhere)
     float ClosedAngle = -90.0f;
+
+	UPROPERTY(EditAnywhere)
+	float UnlockPeriod = 60.0f;
+
+	float CurrentTime;
+	float UnlockedTime;
+
+	UPROPERTY(EditAnywhere)
+	bool IsDoorUnlocked = false;
     
     FRotator NewRotation = FRotator(0.0f, 0.0f, 0.0f);
     
     UPROPERTY(EditAnywhere)
     ATriggerVolume* PressurePlate;
+	
+	UPROPERTY(EditAnywhere)
+	ATriggerVolume* DoorUnlockTrigger;
     
+	UWorld* World;
     AActor* Owner;
 
-    APawn*  ActorThatOpens;
+    APawn* ActorThatOpens;
 };
